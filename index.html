@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Geburtstage</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Rockwell, sans-serif;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  .box {
+    max-width: 900px;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 60px;
+    margin-bottom: 30px;
+    color: #3498db;
+  }
+  .name {
+    font-size: 45px;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  .date-info {
+    font-size: 25px;
+    opacity: 0.8;
+    margin-top: 20px;
+    color: #e67e22;
+  }
+  .none {
+    font-size: 40px;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1 id="title">Geburtstage</h1>
+  <div id="list"></div>
+  <div id="date-display" class="date-info"></div>
+</div>
+
+<script>
+const birthdays = [
+  { name: "Marco Brandt", date: "01-12" }, { name: "Nadin Kern", date: "01-16" },
+  { name: "Heiko Hahn", date: "01-21" }, { name: "Steve Werner", date: "01-21" },
+  { name: "Angela Frötschner", date: "01-22" }, { name: "Markus Schubert", date: "01-23" },
+  { name: "Roland Frötschner", date: "01-25" }, { name: "Günther Gebhardt", date: "02-03" },
+  { name: "Mandy Lorenz", date: "02-04" }, { name: "Ronny Illig", date: "02-25" },
+  { name: "Heiko Speck", date: "03-02" }, { name: "Patrick Friedemann", date: "03-23" },
+  { name: "Bernd Burkhardt", date: "03-24" }, { name: "Axel Möckel", date: "03-28" },
+  { name: "Pierre Krupbauer", date: "04-02" }, { name: "Lars Tröger", date: "04-05" },
+  { name: "Mandy Graßer", date: "04-09" }, { name: "Andreas Trummer", date: "04-18" },
+  { name: "Cedric Münch", date: "04-19" }, { name: "Marvin Pfingst", date: "04-19" },
+  { name: "Thomas Wolff", date: "04-21" }, { name: "Connor Krupbauer", date: "04-23" },
+  { name: "Claudia Grafe-Heinz", date: "05-01" }, { name: "Heiko Kahlfuß", date: "05-02" },
+  { name: "Andreas Fiedler", date: "05-08" }, { name: "Wiktor Szymoniak", date: "05-08" },
+  { name: "Nick Daniel Tessner", date: "06-02" }, { name: "Katrin Hunold", date: "06-04" },
+  { name: "Hans-Jörg Beer", date: "06-06" }, { name: "Uwe Schettler", date: "06-07" },
+  { name: "Peter Müller", date: "06-15" }, { name: "Ole Wendler", date: "06-17" },
+  { name: "Heike Weißflog", date: "06-26" }, { name: "Thomas Horn", date: "06-27" },
+  { name: "Roy Bethke", date: "06-30" }, { name: "René Härtel", date: "07-01" },
+  { name: "Uwe Bruder", date: "07-05" }, { name: "Willy Buschbeck", date: "07-26" },
+  { name: "Jens Dietrich", date: "08-05" }, { name: "Falk Fischer", date: "08-07" },
+  { name: "Christian Hunger", date: "08-10" }, { name: "Henning Schwindt", date: "08-14" },
+  { name: "Torsten Müller", date: "08-22" }, { name: "Jens Voigt", date: "09-02" },
+  { name: "Heiko Wötzel", date: "09-03" }, { name: "Sören Fiedler", date: "09-08" },
+  { name: "Leo Schaaf", date: "09-16" }, { name: "Karsten Seifert", date: "09-16" },
+  { name: "Sanny Morgenstern", date: "09-20" }, { name: "Thomas Frötschner", date: "09-28" },
+  { name: "Mike Seifert", date: "10-02" }, { name: "Lars Urban", date: "10-11" },
+  { name: "Max Baumgartl", date: "10-13" }, { name: "Lars Otto", date: "10-15" },
+  { name: "Jens Zschutschke", date: "10-19" }, { name: "Sylvio Stotz", date: "11-02" },
+  { name: "Steffen Unger", date: "11-07" }, { name: "Mike Eichhorn", date: "11-08" },
+  { name: "Mario Schmidt", date: "11-13" }, { name: "Mario Bliß-Ahrens", date: "11-16" },
+  { name: "Manuel Schache", date: "11-26" }, { name: "Sven Maciejewski", date: "11-29" },
+  { name: "Chris Kornatz", date: "12-01" }, { name: "Enrico Reichmann", date: "12-01" },
+  { name: "Detlef Ziegler", date: "12-02" }, { name: "Kay Mehlhorn", date: "12-09" },
+  { name: "Jörg Bartsch", date: "12-18" }, { name: "Jens Buttker", date: "12-24" },
+  { name: "Reinhard Weidauer", date: "12-29" }
+];
+
+const today = new Date();
+const todayStr = String(today.getMonth()+1).padStart(2,'0') + "-" + String(today.getDate()).padStart(2,'0');
+
+const list = document.getElementById("list");
+const title = document.getElementById("title");
+const dateDisplay = document.getElementById("date-display");
+
+// Funktion zum Anzeigen von Personen
+function displayNames(people) {
+  people.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "name";
+    div.textContent = p.name;
+    list.appendChild(div);
+  });
+}
+
+const todayBirthdays = birthdays.filter(b => b.date === todayStr);
+
+if (todayBirthdays.length > 0) {
+  title.textContent = "🎉 Heute feiert Geburtstag 🥳";
+  displayNames(todayBirthdays);
+} else {
+  // Suche den nächsten Geburtstag
+  title.textContent = "🔜 Nächste Geburtstage 🎂";
+  
+  // Alle Daten in "Tage ab heute" umrechnen, um den kleinsten Abstand zu finden
+  let nextDate = null;
+  let minDiff = Infinity;
+
+  birthdays.forEach(b => {
+    const [m, d] = b.date.split('-').map(Number);
+    let bDate = new Date(today.getFullYear(), m - 1, d);
+    
+    // Wenn das Datum dieses Jahr schon vorbei ist, nimm das nächste Jahr
+    if (bDate < today && (bDate.toDateString() !== today.toDateString())) {
+      bDate.setFullYear(today.getFullYear() + 1);
+    }
+
+    const diff = bDate - today;
+    if (diff < minDiff) {
+      minDiff = diff;
+      nextDate = b.date;
+    }
+  });
+
+  // Alle Personen finden, die an diesem nächsten Datum Geburtstag haben
+  const nextBirthdays = birthdays.filter(b => b.date === nextDate);
+  const [m, d] = nextDate.split('-');
+  
+  displayNames(nextBirthdays);
+  dateDisplay.textContent = `am ${d}.${m}.`;
+}
+</script>
+</body>
+</html>
